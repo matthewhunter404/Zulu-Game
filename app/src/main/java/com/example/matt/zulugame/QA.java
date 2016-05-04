@@ -29,12 +29,12 @@ import java.util.Random;
  */
 public class QA extends Fragment {
     ArrayAdapter<String> mAnswerAdapter;
-    final int displaySize=5;
-    final int QASize=10;
-    int score=0;
-    String displayQuestion;
-    String displayAnswer;
-    String displayAnswers[]= new String[displaySize];
+    final int displaySize=5; //The number of possible answers given to the player at any one time
+    final int QASize=10;    //The overall number of Question/Answer pairs in the database
+    int score=0;            //The score
+    String displayQuestion; //Stores the current question
+    String displayAnswer;   //Stores the current correct answer
+    String displayAnswers[]= new String[displaySize]; //Stores the current answers displayed on the screen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +42,7 @@ public class QA extends Fragment {
     }
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState) {
-
+        //Lets create two matching sets of questions and answers.
         final String[] questionsMaster= {
                 "What is \"I Thank You\" in IsiZulu?",
                 "What is \"Hello\" in IsiZulu?",
@@ -67,40 +67,29 @@ public class QA extends Fragment {
                 "Ngidla",
                 "Ngiyacabanga"
         };
+        //Set the Question and answer options, as well as the various handleson viewobjects
         setQuestion(questionsMaster,answersMaster);
-        // Create some dummy data
-        String[] data = {
-                "Ngiyabonga",
-                "Hamba Kahle",
-                "Ngiyabonga",
-                "Buhle",
-                "Sahle Kahle"
-        };
-        final List<String> Answerlist = new ArrayList<String>(Arrays.asList(displayAnswers));
-
-
         mAnswerAdapter = new ArrayAdapter<String>(getActivity(), R.layout.answers_list_item, R.id.answers_list_item_textview, displayAnswers);
         View rootView = inflater.inflate(R.layout.qa_fragment,container, false);
- //Get a reference to the ListView, and attach this adapter to it.
         final ListView listView = (ListView) rootView.findViewById(R.id.AnswerList);
         listView.setAdapter(mAnswerAdapter);
         final TextView questionText= (TextView) rootView.findViewById(R.id.Question);
         questionText.setText("Question: " + displayQuestion);
         final TextView Pointtext = (TextView) rootView.findViewById(R.id.Points);
+        //Sets the onclicklistenerto respond to list item selections by the user.
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 String Answer = mAnswerAdapter.getItem(position);
                 if (Answer == displayAnswer) {
-                    //Toast.makeText(getActivity(), Answer, Toast.LENGTH_SHORT).show();
-                    setQuestion(questionsMaster, answersMaster);
-                    questionText.setText("Question: " + displayQuestion);
-                    mAnswerAdapter.notifyDataSetChanged();
-                    score++;
+                    setQuestion(questionsMaster, answersMaster); //Sets the nextquestion
+                    questionText.setText("Question: " + displayQuestion); //Displays the question
+                    mAnswerAdapter.notifyDataSetChanged();      //updates the list adapter
+                    score++;                                    //updates the score
                     Pointtext.setText("Score: "+score);
                 }
                 else{
-                    score--;
+                    score--;                                    //updates the score
                     Pointtext.setText("Score: "+score);
                 }
             }
@@ -108,6 +97,7 @@ public class QA extends Fragment {
 
         return rootView;
     }
+    //the setQuestion method is passed a matching pair of questions and answers. It will use these to update the displayQuestion, displayAnswer, displayAnswers variables
     public void setQuestion(String[] questions,String[] answers) {
         int alreadySelected[]= new int[displaySize];
         Random randomGenerator = new Random();
