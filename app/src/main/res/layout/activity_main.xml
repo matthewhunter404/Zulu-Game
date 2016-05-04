@@ -5,8 +5,9 @@
     android:baselineAligned="false"
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="vertical"
-    tools:context="com.example.android.sunshine.app.MainActivity">
-<fragment
+    tools:context="com.example.android.sunshine.app.MainActivity"
+    android:id = "@+id/container">
+    <fragment
     android:id="@+id/qa_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
