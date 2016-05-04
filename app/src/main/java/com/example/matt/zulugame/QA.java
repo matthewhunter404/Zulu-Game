@@ -12,7 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.io.BufferedReader;
 import java.io.IOException;
         import java.io.InputStream;
@@ -30,11 +29,13 @@ import java.util.Random;
 public class QA extends Fragment {
     ArrayAdapter<String> mAnswerAdapter;
     final int displaySize=5; //The number of possible answers given to the player at any one time
-    final int QASize=10;    //The overall number of Question/Answer pairs in the database
+    final int QASize=15;    //The overall number of Question/Answer pairs in the database
     int score=0;            //The score
     String displayQuestion; //Stores the current question
-    String displayAnswer;   //Stores the current correct answer
+    String displayAnswer;   //Stores the current correct answe
     String displayAnswers[]= new String[displaySize]; //Stores the current answers displayed on the screen
+    HistoryQueue pastQuestions=new HistoryQueue(5); //This will keep track of recently asked questions so that the samequestion isn't asked repeatedly
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +55,11 @@ public class QA extends Fragment {
                 "What is \"I Run\" in IsiZulu?",
                 "What is \"I Eat\" in IsiZulu?",
                 "What is \"I Think\" in IsiZulu?",
+                "What is \"Mountain\" in IsiZulu?",
+                "What is \"Grass\" in IsiZulu?",
+                "What is \"Sky\" in IsiZulu?",
+                "What is \"Boy\" or \"Sun\" in IsiZulu?",
+                "What is \"Girl\" or \"Daughter\" in IsiZulu?"
         };
         final String[] answersMaster= {
                 "Ngiyabonga",
@@ -65,7 +71,12 @@ public class QA extends Fragment {
                 "Ngiyahamba",
                 "Ngigijima",
                 "Ngidla",
-                "Ngiyacabanga"
+                "Ngiyacabanga",
+                "Intaba",
+                "Isikhotha",
+                "Isibhakabhaka",
+                "Umfana",
+                "intombazane"
         };
         //Set the Question and answer options, as well as the various handleson viewobjects
         setQuestion(questionsMaster,answersMaster);
@@ -115,16 +126,20 @@ public class QA extends Fragment {
         //Now lets generate the actual answer/question pair and insert a real answer over one of the fake answers
         boolean haveAnswer=false;
         while (haveAnswer==false){
-            randomInt = randomGenerator.nextInt(QASize);
+            randomInt = randomGenerator.nextInt(QASize);             //select a QA index
+            //Then check to see if it's already a fake answer or has already been selected
             if (checkIfUnique(alreadySelected,randomInt)==true){
-                haveAnswer=true;
+                if (pastQuestions.checkItemHistory(randomInt)==true){
+                    haveAnswer=true;
+                }
             }
         }
         int randomInt2=randomGenerator.nextInt(displaySize);
         displayQuestion=questions[randomInt];
         displayAnswer=answers[randomInt];
         displayAnswers[randomInt2]=answers[randomInt];
-        String quick=answers[randomInt] +" was assigned to pos "+Integer.toString(randomInt2)+". "+"displayAnswers is "+displayAnswers[randomInt2];
+        pastQuestions.add(randomInt);
+        //String quick=answers[randomInt] +" was assigned to pos "+Integer.toString(randomInt2)+". "+"displayAnswers is "+displayAnswers[randomInt2];
         //Toast.makeText(getActivity(), quick, Toast.LENGTH_SHORT).show();
         //ListView listView = (ListView) passedrootview.findViewById(R.id.AnswerList);
         //listView.setAdapter(mAnswerAdapter);
@@ -138,6 +153,7 @@ public class QA extends Fragment {
             unique=false;
             }
         }
+        Utility.bla();
         return unique;
     }
 
