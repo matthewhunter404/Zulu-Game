@@ -1,5 +1,7 @@
 package com.example.matt.zulugame;
 
+import android.database.Cursor;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,6 +23,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -58,7 +61,7 @@ public class QA extends Fragment {
                 "What is \"Mountain\" in IsiZulu?",
                 "What is \"Grass\" in IsiZulu?",
                 "What is \"Sky\" in IsiZulu?",
-                "What is \"Boy\" or \"Sun\" in IsiZulu?",
+                "What is \"Boy\" or \"Son\" in IsiZulu?",
                 "What is \"Girl\" or \"Daughter\" in IsiZulu?"
         };
         final String[] answersMaster= {
@@ -76,45 +79,55 @@ public class QA extends Fragment {
                 "Isikhotha",
                 "Isibhakabhaka",
                 "Umfana",
-                "intombazane"
+                "Intombazane"
         };
         //Set the Question and answer options, as well as the various handleson viewobjects
-        setQuestion(questionsMaster,answersMaster);
+
         mAnswerAdapter = new ArrayAdapter<String>(getActivity(), R.layout.answers_list_item, R.id.answers_list_item_textview, displayAnswers);
         View rootView = inflater.inflate(R.layout.qa_fragment,container, false);
         final ListView listView = (ListView) rootView.findViewById(R.id.AnswerList);
         listView.setAdapter(mAnswerAdapter);
+        setQuestion(questionsMaster, answersMaster, listView);
         final TextView questionText= (TextView) rootView.findViewById(R.id.Question);
         questionText.setText("Question: " + displayQuestion);
         final TextView Pointtext = (TextView) rootView.findViewById(R.id.Points);
         //Sets the onclicklistenerto respond to list item selections by the user.
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 String Answer = mAnswerAdapter.getItem(position);
                 if (Answer == displayAnswer) {
-                    setQuestion(questionsMaster, answersMaster); //Sets the nextquestion
+                    setQuestion(questionsMaster, answersMaster, listView); //Sets the nextquestion
                     questionText.setText("Question: " + displayQuestion); //Displays the question
                     mAnswerAdapter.notifyDataSetChanged();      //updates the list adapter
                     score++;                                    //updates the score
-                    Pointtext.setText("Score: "+score);
-                }
-                else{
+                    Pointtext.setText("Score: " + score);
+                    View whatwhat;
+                    //((TextView)view).setTextColor(Color.RED);
+                    //Toast.makeText(getActivity(), String.valueOf(What), Toast.LENGTH_SHORT).show();
+                    //listView.setBackgroundColor(getResources().getColor(R.color.green));
+                } else {
                     score--;                                    //updates the score
-                    Pointtext.setText("Score: "+score);
+                    Pointtext.setText("Score: " + score);
                 }
             }
-        });
 
+        });
+        View What=mAnswerAdapter.getView(1,null,listView);
+        //What.setBackgroundColor(getResources().getColor(R.color.red));
+        What.setBackgroundResource(R.drawable.touch_selector2);
         return rootView;
     }
     //the setQuestion method is passed a matching pair of questions and answers. It will use these to update the displayQuestion, displayAnswer, displayAnswers variables
-    public void setQuestion(String[] questions,String[] answers) {
+    public void setQuestion(String[] questions,String[] answers, ViewGroup pListview) {
         int alreadySelected[]= new int[displaySize];
         Random randomGenerator = new Random();
         int randomInt=0;
         //first we generate fake answers
         int i = 0;
+        //View What=mAnswerAdapter.getView(0,null,pListview); //We can safely call null here as no scroling through the listview takes place.
+        //What.setBackgroundColor(getResources().getColor(R.color.red));
         while(i<displaySize){
             randomInt = randomGenerator.nextInt(QASize);
             if (checkIfUnique(alreadySelected,randomInt)==true){
@@ -141,7 +154,7 @@ public class QA extends Fragment {
         pastQuestions.add(randomInt);
         //String quick=answers[randomInt] +" was assigned to pos "+Integer.toString(randomInt2)+". "+"displayAnswers is "+displayAnswers[randomInt2];
         //Toast.makeText(getActivity(), quick, Toast.LENGTH_SHORT).show();
-        //ListView listView = (ListView) passedrootview.findViewById(R.id.AnswerList);
+        // ListView listView = (ListView) passedrootview.findViewById(R.id.AnswerList);
         //listView.setAdapter(mAnswerAdapter);
         //alreadySelected[randomInt2]=randomInt;
     }
