@@ -83,7 +83,7 @@ public class QA extends Fragment {
         };
         //Set the Question and answer options, as well as the various handleson viewobjects
 
-        mAnswerAdapter = new ArrayAdapter<String>(getActivity(), R.layout.answers_list_item, R.id.answers_list_item_textview, displayAnswers);
+        mAnswerAdapter = new ZuluListAdapter(getActivity(), R.layout.answers_list_item, R.id.answers_list_item_textview, displayAnswers);
         View rootView = inflater.inflate(R.layout.qa_fragment,container, false);
         final ListView listView = (ListView) rootView.findViewById(R.id.AnswerList);
         listView.setAdapter(mAnswerAdapter);
