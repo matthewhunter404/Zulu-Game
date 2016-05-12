@@ -99,13 +99,6 @@
                 android:layout_height="wrap_content"
                 />
 
-        <!--android:textSize="24sp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:textColor="@color/grey_700"
-        android:background="@drawable/touch_selector"
-        android:clickable="true"-->
-
 
     </LinearLayout>
 

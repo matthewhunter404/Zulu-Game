@@ -9,7 +9,10 @@
     <color name="light_blue">#ff64c2f4</color>
     <color name="blue">#ff1ca8f4</color>
     <color name="dark_blue">#0288D1</color>
-    <color name="red">#a42f1e</color>
+    <color name="red">#FF0000</color>
+    <color name="lightred">#880000</color>
     <color name="white">#FFFFFF</color>
     <color name="green">#00FF00</color>
+    <color name="lightgreen">#005500</color>
+    <color name="yellow">#FFFF00</color>
 </resources>

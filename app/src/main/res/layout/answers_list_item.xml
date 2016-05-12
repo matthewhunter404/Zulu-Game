@@ -6,6 +6,6 @@
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:textSize="24sp"
     android:id="@+id/answers_list_item_textview"
-    android:background="@drawable/touch_selector"
+    android:background="@drawable/touch_selector_right"
 
 />

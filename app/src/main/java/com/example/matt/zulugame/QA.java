@@ -1,11 +1,7 @@
 package com.example.matt.zulugame;
 
-import android.database.Cursor;
-import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,30 +9,20 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-import java.io.BufferedReader;
-import java.io.IOException;
-        import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+
 import java.util.Random;
 
 /**
  * Created by matt on 2016/04/15.
  */
 public class QA extends Fragment {
-    ArrayAdapter<String> mAnswerAdapter;
+    ArrayAdapter<DisplayAnswer> mAnswerAdapter;
     final int displaySize=5; //The number of possible answers given to the player at any one time
     final int QASize=15;    //The overall number of Question/Answer pairs in the database
     int score=0;            //The score
     String displayQuestion; //Stores the current question
     String displayAnswer;   //Stores the current correct answe
-    String displayAnswers[]= new String[displaySize]; //Stores the current answers displayed on the screen
+    DisplayAnswer displayAnswers[]= new DisplayAnswer[displaySize]; //Stores the current answers displayed on the screen
     HistoryQueue pastQuestions=new HistoryQueue(5); //This will keep track of recently asked questions so that the samequestion isn't asked repeatedly
 
     @Override
@@ -96,17 +82,13 @@ public class QA extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                String Answer = mAnswerAdapter.getItem(position);
+                String Answer = mAnswerAdapter.getItem(position).getAnswer();
                 if (Answer == displayAnswer) {
                     setQuestion(questionsMaster, answersMaster, listView); //Sets the nextquestion
                     questionText.setText("Question: " + displayQuestion); //Displays the question
                     mAnswerAdapter.notifyDataSetChanged();      //updates the list adapter
                     score++;                                    //updates the score
                     Pointtext.setText("Score: " + score);
-                    View whatwhat;
-                    //((TextView)view).setTextColor(Color.RED);
-                    //Toast.makeText(getActivity(), String.valueOf(What), Toast.LENGTH_SHORT).show();
-                    //listView.setBackgroundColor(getResources().getColor(R.color.green));
                 } else {
                     score--;                                    //updates the score
                     Pointtext.setText("Score: " + score);
@@ -114,9 +96,6 @@ public class QA extends Fragment {
             }
 
         });
-        View What=mAnswerAdapter.getView(1,null,listView);
-        //What.setBackgroundColor(getResources().getColor(R.color.red));
-        What.setBackgroundResource(R.drawable.touch_selector2);
         return rootView;
     }
     //the setQuestion method is passed a matching pair of questions and answers. It will use these to update the displayQuestion, displayAnswer, displayAnswers variables
@@ -126,13 +105,13 @@ public class QA extends Fragment {
         int randomInt=0;
         //first we generate fake answers
         int i = 0;
-        //View What=mAnswerAdapter.getView(0,null,pListview); //We can safely call null here as no scroling through the listview takes place.
-        //What.setBackgroundColor(getResources().getColor(R.color.red));
         while(i<displaySize){
             randomInt = randomGenerator.nextInt(QASize);
             if (checkIfUnique(alreadySelected,randomInt)==true){
                 alreadySelected[i]=randomInt;
-                displayAnswers[i]=answers[randomInt];
+                displayAnswers[i]= new DisplayAnswer(answers[randomInt],false);
+                //displayAnswers[i].setAnswer(answers[randomInt]);
+                //displayAnswers[i].setCorrect(true);
                 i++;
             }
         }
@@ -150,7 +129,8 @@ public class QA extends Fragment {
         int randomInt2=randomGenerator.nextInt(displaySize);
         displayQuestion=questions[randomInt];
         displayAnswer=answers[randomInt];
-        displayAnswers[randomInt2]=answers[randomInt];
+        displayAnswers[randomInt2].setAnswer(answers[randomInt]);
+        displayAnswers[randomInt2].setCorrect(true);
         pastQuestions.add(randomInt);
         //String quick=answers[randomInt] +" was assigned to pos "+Integer.toString(randomInt2)+". "+"displayAnswers is "+displayAnswers[randomInt2];
         //Toast.makeText(getActivity(), quick, Toast.LENGTH_SHORT).show();
